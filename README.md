@@ -1,2 +1,2 @@
 # BounceShot
-Game made with Unity
+Game made with Unity and C# programming language
