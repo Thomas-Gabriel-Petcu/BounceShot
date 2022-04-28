@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class GameRunningState : BaseState
 {
+    DefenseObjective defenseObjective;
+    private GameObject _menu;
+    private Transform _child;
+
     public GameRunningState(GameStateMachine gsm) : base("GameRunningState", gsm)
     {
 
@@ -12,6 +16,10 @@ public class GameRunningState : BaseState
     public override void OnEnterState()
     {
         base.OnEnterState();
+        Time.timeScale = 1;
+        defenseObjective = GameObject.Find("DefenseObjective").GetComponent<DefenseObjective>();
+        _menu = GameObject.Find("Menu");
+        _child = _menu.transform.GetChild(1);
         //resume the game
     }
 
@@ -21,7 +29,12 @@ public class GameRunningState : BaseState
         //Update logic here
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Debug.Log("Paused game");
+            fsm.ChangeState(((GameStateMachine)fsm).gamePausedState);
+        }
+        if (defenseObjective.Health <=0)
+        {
+            _child.gameObject.SetActive(true);
+            ScoreManager.Instance.SaveScore();
             fsm.ChangeState(((GameStateMachine)fsm).gamePausedState);
         }
     }

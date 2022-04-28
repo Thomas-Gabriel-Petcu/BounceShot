@@ -19,4 +19,8 @@ public class GameStateMachine : FiniteStateMachine
     {
         return gameRunningState;
     }
+    public void Quit()
+    {
+        Application.Quit();
+    }
 }

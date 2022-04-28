@@ -7,7 +7,7 @@ public abstract class FiniteStateMachine : MonoBehaviour
     BaseState _currentState;
 
 
-    private void Start()
+    public virtual void Start()
     {
         _currentState = GetInitialState();
         if (_currentState != null)

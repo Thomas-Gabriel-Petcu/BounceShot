@@ -2,25 +2,29 @@ using UnityEngine;
 
 public class PlayerJumpState : BaseState
 {
-    GameObject _player;
-    public PlayerJumpState(PlayerMovementFSM pmfsm) : base("PlayerJumpState", pmfsm) { }
+    private GameObject _player;
+    private Rigidbody2D playerRB2D;
+
+    private float jumpForce;
+    public PlayerJumpState(PlayerMovementFSM pmfsm, float jumpForce, GameObject player) : base("PlayerJumpState", pmfsm)
+    {
+        this.jumpForce = jumpForce;
+        _player = player;
+        playerRB2D = player.GetComponent<Rigidbody2D>();
+    }
 
     public override void OnEnterState()
     {
         base.OnEnterState();
-        if (_player == null) _player = GameObject.FindGameObjectWithTag("Player");
-        if (_player == null) return;
-        if (!_player.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb)) return;
-
-        Debug.Log("Jumped");
+        playerRB2D.AddForce(new Vector2(0, jumpForce));
     }
     public override void OnUpdateLogic()
     {
         base.OnUpdateLogic();
-        if (_player == null) return;
-        
-        
-        //fsm.ChangeState(((PlayerMovementFSM)fsm).playerIdleState);
+        if (playerRB2D.velocity.y < 0)//transition to falling state
+        {
+            fsm.ChangeState(((PlayerMovementFSM)fsm).playerFallingState);
+        }
     }
     public override void OnUpdatePhysics()
     {
